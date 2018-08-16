@@ -31,7 +31,7 @@
 
             <!-- "More" button -->
             <div class="card-footer">
-              <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal">More</button>
+              <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-id="${item.id}">More</button>
             </div>
           </div>
         </div>
