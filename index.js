@@ -11,6 +11,13 @@
     displayDataList(data)
   }).catch((err) => console.log(err))
 
+  // listen to data panel
+  dataPanel.addEventListener('click', (event) => {
+    if (event.target.matches('.btn-show-movie')) {
+      console.log(event.target)
+    }
+  })
+
   function displayDataList (data) {
     let htmlContent = ''
     data.forEach(function (item, index) {
