@@ -21,6 +21,11 @@
             <div class="card-body movie-item-body">
               <h6 class="card-title">${item.title}</h5>
             </div>
+
+            <!-- "More" button -->
+            <div class="card-footer">
+              <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal">More</button>
+            </div>
           </div>
         </div>
       `
