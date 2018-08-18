@@ -36,7 +36,10 @@
     let results = data.filter(
       movie => movie.title.toLowerCase().includes(input)
     )
-    displayDataList(results)
+    console.log(results)
+    // displayDataList(results)
+    getTotalPages(results)
+    getPageData(1, results)
   })
 
   // listen to pagination click event
