@@ -7,6 +7,12 @@
 
   displayDataList(data)
 
+  dataPanel.addEventListener('click', (event) => {
+    if (event.target.matches('.btn-show-movie')) {
+      showMovie(event.target.dataset.id)
+    }
+  })
+
   function displayDataList (data) {
     let htmlContent = ''
     data.forEach(function (item, index) {
@@ -26,5 +32,29 @@
       `
     })
     dataPanel.innerHTML = htmlContent
+  }
+
+  function showMovie (id) {
+    // get elements
+    const modalTitle = document.getElementById('show-movie-title')
+    const modalImage = document.getElementById('show-movie-image')
+    const modalDate = document.getElementById('show-movie-date')
+    const modalDescription = document.getElementById('show-movie-description')
+
+    // set request url
+    const url = INDEX_URL + id
+    console.log(url)
+
+    // send request to show api
+    axios.get(url).then(response => {
+      const data = response.data.results
+      console.log(data)
+
+      // insert data into modal ui
+      modalTitle.textContent = data.title
+      modalImage.innerHTML = `<img src="${POSTER_URL}${data.image}" class="img-fluid" alt="Responsive image">`
+      modalDate.textContent = `release at : ${data.release_date}`
+      modalDescription.textContent = `${data.description}`
+    })
   }
 })()
