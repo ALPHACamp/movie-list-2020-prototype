@@ -17,6 +17,9 @@
   dataPanel.addEventListener('click', (event) => {
     if (event.target.matches('.btn-show-movie')) {
       showMovie(event.target.dataset.id)
+    } else if (event.target.matches('.btn-add-favorite')) {
+      console.log(event.target.dataset.id)
+      addFavoriteItem(event.target.dataset.id)
     }
   })
 
@@ -46,6 +49,8 @@
             <!-- "More" button -->
             <div class="card-footer">
               <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-id="${item.id}">More</button>
+              <!-- favorite button --> 
+              <button class="btn btn-info btn-add-favorite" data-id="${item.id}">+</button>
             </div>
           </div>
         </div>
