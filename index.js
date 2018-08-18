@@ -10,11 +10,13 @@
 
   const pagination = document.getElementById('pagination')
   const ITEM_PER_PAGE = 12
+  let paginationData = []
 
   axios.get(INDEX_URL).then((response) => {
     data.push(...response.data.results)
     getTotalPages(data)
-    displayDataList(data)
+    // displayDataList(data)
+    getPageData(1, data)
   }).catch((err) => console.log(err))
 
   // listen to data panel
@@ -39,6 +41,14 @@
     displayDataList(results)
   })
 
+  // listen to pagination click event
+  pagination.addEventListener('click', event => {
+    console.log(event.target.dataset.page)
+    if (event.target.tagName === 'A') {
+      getPageData(event.target.dataset.page)
+    }
+  })
+
   function getTotalPages (data) {
     let totalPages = Math.ceil(data.length / ITEM_PER_PAGE) || 1
     let pageItemContent = ''
@@ -50,6 +60,13 @@
       `
     }
     pagination.innerHTML = pageItemContent
+  }
+
+  function getPageData (pageNum, data) {
+    paginationData = data || paginationData
+    let offset = (pageNum - 1) * ITEM_PER_PAGE
+    let pageData = paginationData.slice(offset, offset + ITEM_PER_PAGE)
+    displayDataList(pageData)
   }
 
   function displayDataList (data) {
