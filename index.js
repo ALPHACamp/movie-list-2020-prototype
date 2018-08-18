@@ -38,7 +38,9 @@
 
     results = data.filter(movie => movie.title.match(regex))
     console.log(results)
-    displayDataList(results)
+    // displayDataList(results)
+    getTotalPages(results)
+    getPageData(1, results)
   })
 
   // listen to pagination click event
