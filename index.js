@@ -82,4 +82,17 @@
       modalDescription.textContent = `${data.description}`
     })
   }
+
+  function addFavoriteItem (id) {
+    const list = JSON.parse(localStorage.getItem('favoriteMovies')) || []
+    const movie = data.find(item => item.id === Number(id))
+
+    if (list.some(item => item.id === Number(id))) {
+      alert(`${movie.title} is already in your favorite list.`)
+    } else {
+      list.push(movie)
+      alert(`Added ${movie.title} to your favorite list!`)
+    }
+    localStorage.setItem('favoriteMovies', JSON.stringify(list))
+  }
 })()
