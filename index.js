@@ -23,7 +23,13 @@
   // listen to search btn click event
   searchBtn.addEventListener('click', event => {
     event.preventDefault()
-    console.log('click!')
+
+    let results = []
+    const regex = new RegExp(searchInput.value, 'i')
+
+    results = data.filter(movie => movie.title.match(regex))
+    console.log(results)
+    displayDataList(results)
   })
 
   function displayDataList (data) {
