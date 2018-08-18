@@ -8,8 +8,12 @@
   const searchForm = document.getElementById('search')
   const searchInput = document.getElementById('search-input')
 
+  const pagination = document.getElementById('pagination')
+  const ITEM_PER_PAGE = 12
+
   axios.get(INDEX_URL).then((response) => {
     data.push(...response.data.results)
+    getTotalPages(data)
     displayDataList(data)
   }).catch((err) => console.log(err))
 
@@ -32,6 +36,19 @@
     )
     displayDataList(results)
   })
+
+  function getTotalPages (data) {
+    let totalPages = Math.ceil(data.length / ITEM_PER_PAGE) || 1
+    let pageItemContent = ''
+    for (let i = 0; i < totalPages; i++) {
+      pageItemContent += `
+        <li class="page-item">
+          <a class="page-link" href="javascript:;" data-page="${i + 1}">${i + 1}</a>
+        </li>
+      `
+    }
+    pagination.innerHTML = pageItemContent
+  }
 
   function displayDataList (data) {
     let htmlContent = ''
