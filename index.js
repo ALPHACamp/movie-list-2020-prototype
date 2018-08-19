@@ -5,6 +5,8 @@
   const data = []
 
   const dataPanel = document.getElementById('data-panel')
+  const searchBtn = document.getElementById('submit-search')
+  const searchInput = document.getElementById('search')
 
   axios.get(INDEX_URL).then((response) => {
     data.push(...response.data.results)
@@ -16,6 +18,12 @@
     if (event.target.matches('.btn-show-movie')) {
       showMovie(event.target.dataset.id)
     }
+  })
+
+  // listen to search btn click event
+  searchBtn.addEventListener('click', event => {
+    event.preventDefault()
+    console.log('click!')
   })
 
   function displayDataList (data) {
