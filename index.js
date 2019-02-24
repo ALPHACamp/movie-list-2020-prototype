@@ -11,6 +11,10 @@
   const pagination = document.getElementById('pagination')
   const ITEM_PER_PAGE = 12
   let paginationData = []
+  let pageNum = 1
+
+  let viewMode = 'card'
+  const viewSwitcher = document.querySelector('.view-switcher')
 
   axios.get(INDEX_URL).then((response) => {
     data.push(...response.data.results)
@@ -26,6 +30,20 @@
     } else if (event.target.matches('.btn-add-favorite')) {
       console.log(event.target.dataset.id)
       addFavoriteItem(event.target.dataset.id)
+    }
+  })
+
+  // listen to view-switcher cliick
+  viewSwitcher.addEventListener('click', event => {
+    console.log(event.target)
+    if (event.target.matches('.btn-view-list')) {
+      viewMode = 'list'
+      getTotalPages(data)
+      getPageData(pageNum, data)
+    } else if (event.target.matches('.btn-view-card')) {
+      viewMode = 'card'
+      getTotalPages(data)
+      getPageData(pageNum, data)
     }
   })
 
@@ -46,8 +64,10 @@
   // listen to pagination click event
   pagination.addEventListener('click', event => {
     console.log(event.target.dataset.page)
+    pageNum = event.target.dataset.page
+
     if (event.target.tagName === 'A') {
-      getPageData(event.target.dataset.page)
+      getPageData(pageNum)
     }
   })
 
@@ -68,31 +88,52 @@
     paginationData = data || paginationData
     let offset = (pageNum - 1) * ITEM_PER_PAGE
     let pageData = paginationData.slice(offset, offset + ITEM_PER_PAGE)
-    displayDataList(pageData)
+    displayDataList(pageData, viewMode)
   }
 
   function displayDataList (data) {
-    let htmlContent = ''
-    data.forEach(function (item, index) {
-      htmlContent += `
-        <div class="col-sm-3">
-          <div class="card mb-2">
-            <img class="card-img-top " src="${POSTER_URL}${item.image}" alt="Card image cap">
-            <div class="card-body movie-item-body">
-              <h6 class="card-title">${item.title}</h5>
+    console.log(viewMode)
+    if (viewMode === 'card') {
+      let htmlContent = ''
+      data.forEach(function (item, index) {
+        htmlContent += `
+            <div class="col-sm-3">
+              <div class="card mb-2">
+                <img class="card-img-top " src="${POSTER_URL}${item.image}" alt="Card image cap">
+                <div class="card-body movie-item-body">
+                  <h6 class="card-title">${item.title}</h5>
+                </div>
+    
+                <!-- "More" button -->
+                <div class="card-footer">
+                  <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-id="${item.id}">More</button>
+                  <!-- favorite button --> 
+                  <button class="btn btn-info btn-add-favorite" data-id="${item.id}">+</button>
+                </div>
+              </div>
             </div>
+          `
+      })
+      dataPanel.innerHTML = htmlContent
+    } else if (viewMode === 'list') {
+      let htmlContent = `<table class="table"><tbody>`
 
-            <!-- "More" button -->
-            <div class="card-footer">
-              <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-id="${item.id}">More</button>
-              <!-- favorite button --> 
-              <button class="btn btn-info btn-add-favorite" data-id="${item.id}">+</button>
-            </div>
-          </div>
-        </div>
-      `
-    })
-    dataPanel.innerHTML = htmlContent
+      data.forEach(function (item, index) {
+        htmlContent += `
+            <tr>
+              <td>${item.title}</td>
+              <td>
+                <!-- "More" button -->
+                <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-id="${item.id}">More</button>
+                <!-- favorite button --> 
+                <button class="btn btn-info btn-add-favorite" data-id="${item.id}">+</button>
+              </td>
+            </tr>
+          `
+      })
+      htmlContent += '</tbody></table>'
+      dataPanel.innerHTML = htmlContent
+    }
   }
 
   function showMovie (id) {
