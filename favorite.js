@@ -67,7 +67,7 @@
 
     // removie movie and update localStorage
     data.splice(index, 1)
-    localStorage.setItem('favoriteMovie', JSON.stringify(data))
+    localStorage.setItem('favoriteMovies', JSON.stringify(data))
 
     // repaint dataList
     displayDataList(data)
