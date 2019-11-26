@@ -23,7 +23,11 @@
   // listen to search form submit event
   searchForm.addEventListener('submit', event => {
     event.preventDefault()
-    console.log('click!')
+    let input = searchInput.value.toLowerCase()
+    let results = data.filter(
+      movie => movie.title.toLowerCase().includes(input)
+    )
+    displayDataList(results)
   })
 
   function displayDataList (data) {
