@@ -78,7 +78,7 @@
           <div class="card mb-2">
             <img class="card-img-top " src="${POSTER_URL}${item.image}" alt="Card image cap">
             <div class="card-body movie-item-body">
-              <h6 class="card-title">${item.title}</h5>
+              <h5 class="card-title">${item.title}</h5>
             </div>
 
             <!-- "More" button -->
