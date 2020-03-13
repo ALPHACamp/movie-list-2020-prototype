@@ -65,7 +65,7 @@
     const index = data.findIndex(item => item.id === Number(id))
     if (index === -1) return
 
-    // removie movie and update localStorage
+    // remove movie and update localStorage
     data.splice(index, 1)
     localStorage.setItem('favoriteMovies', JSON.stringify(data))
 
