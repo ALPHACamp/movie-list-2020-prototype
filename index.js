@@ -1,33 +1,15 @@
 const BASE_URL = "https://movie-list.alphacamp.io";
 const INDEX_URL = BASE_URL + "/api/v1/movies/";
 const POSTER_URL = BASE_URL + "/posters/";
-const movies = [];
 
 const dataPanel = document.getElementById("data-panel");
 const searchForm = document.getElementById("search");
 const searchInput = document.getElementById("search-input");
-const pagination = document.getElementById("pagination");
+const paginator = document.getElementById("pagination");
 const ITEM_PER_PAGE = 8;
+
+const movies = [];
 let filteredMovies = [];
-
-// API Services
-async function fetchMovies() {
-  try {
-    const { data } = await axios.get(INDEX_URL);
-    return data.results;
-  } catch (error) {
-    console.error("Calling Index API Error: ", error);
-  }
-}
-
-async function fetchMovieById(id) {
-  try {
-    const { data } = await axios.get(INDEX_URL + id);
-    return data.results;
-  } catch (error) {
-    console.error("Calling Show API Error: ", error);
-  }
-}
 
 // listen to data panel
 dataPanel.addEventListener("click", function onPanelClicked(event) {
@@ -42,22 +24,27 @@ dataPanel.addEventListener("click", function onPanelClicked(event) {
 // listen to search form submit event
 searchForm.addEventListener("submit", function onSearchSubmitted(event) {
   event.preventDefault();
-  let input = searchInput.value.toLowerCase();
+  let keyword = searchInput.value.toLowerCase();
+  if (!keyword) {
+    return alert("Please enter a valid keyword");
+  }
+
   filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(input)
+    movie.title.toLowerCase().includes(keyword)
   );
-  console.log(
-    "Search button clicked, keyword: ",
-    input,
-    "result: ",
-    filteredMovies
-  );
+
+  // 如果搜尋不到任何電影
+  if (filteredMovies.length === 0) {
+    alert("Cannot find any movies with keyword: " + keyword);
+    searchInput.value = "";
+  }
+
   renderPaginator(filteredMovies.length);
   renderMovieList(getMoviesByPage(1));
 });
 
 // listen to pagination click event
-pagination.addEventListener("click", function onPaginatorClicked(event) {
+paginator.addEventListener("click", function onPaginatorClicked(event) {
   if (event.target.tagName !== "A") return;
 
   console.log("Paginator clicked, page number: ", event.target.dataset.page);
@@ -82,7 +69,7 @@ function renderPaginator(amount) {
         </li>
       `;
   }
-  pagination.innerHTML = pageItemContent;
+  paginator.innerHTML = pageItemContent;
 }
 
 function renderMovieList(data) {
@@ -117,7 +104,9 @@ function showMovieModal(id) {
   const modalDescription = document.getElementById("show-movie-description");
 
   // send request to show api
-  fetchMovieById(id).then((data) => {
+  axios.get(INDEX_URL + id).then((response) => {
+    const data = response.data.results;
+
     // insert data into modal ui
     modalTitle.textContent = data.title;
     modalImage.innerHTML = `<img src="${POSTER_URL}${data.image}" class="img-fluid" alt="Responsive image">`;
@@ -139,8 +128,8 @@ function addFavoriteItem(id) {
   localStorage.setItem("favoriteMovies", JSON.stringify(list));
 }
 
-fetchMovies().then((data) => {
-  movies.push(...data);
+axios.get(INDEX_URL).then((response) => {
+  movies.push(...response.data.results);
   renderPaginator(movies.length);
   renderMovieList(getMoviesByPage(1));
 });
